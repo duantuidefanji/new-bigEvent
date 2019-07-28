@@ -18,8 +18,8 @@
     <div class="sider">
         <a href="#" class="logo"><img src="images/logo02.png" alt="logo"></a>
         <div class="user_info">
-            <img src="images/2.jpg" alt="person">
-            <span>欢迎&nbsp;&nbsp;李思思</span>
+            <img src="images/2.jpg" alt="person" id="imge">
+            <span id="li">欢迎&nbsp;&nbsp;李思思</span>
             <b>管理员</b>
         </div>
         <div class="menu">
@@ -138,6 +138,23 @@
                     window.location.href = 'login.html'
                 }
             })
+        })
+    </script>
+
+    <!-- 获取用户信息 -->
+    <script>
+        var nickname = $('#li').text();
+        var user_pic = $('#imge').attr('src');
+        // console.log(nickname, user_pic);
+        $.get('http://localhost:8000/admin/getuser', {
+            nickname: nickname,
+            user_pic: user_pic
+        }, function(res) {
+            //  console.log(res) 
+            if (res.code === 200) {
+                $('#li').text(res.data.nikename);
+                $('#imge').attr('src', res.data.user_pic);
+            }
         })
     </script>
 
