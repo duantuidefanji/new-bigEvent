@@ -126,9 +126,36 @@
             }
         })
     </script>
+    <!-- 换一种方式继续 -->
+    <!-- 第三方模板引擎渲染 -->
+    <script src="./js/template-web.js"></script>
+    <script type="text/html" id="model">
+        {{each data item}}
+        <tr id={{item.id}}> >
+            <td>{{item.name}}</td>
+            <td>{{item.slug}}</td>
+            <td class="text-center">
+                <a href="javascript:editTr({&quot;id&quot;:&quot;3&quot;,&quot;slug&quot;:&quot;living&quot;,&quot;name&quot;:&quot;会生活&quot;});" class="btn btn-info btn-xs">编辑</a>
+                <a href="javascript:deleteTr( 3 );" class="btn btn-danger btn-xs">删除</a>
+            </td>
+        </tr>
+        {{/each}}
+
+    </script>
+
+
 
     <script>
         $.getJSON('http://localhost:8000/admin/category_search', function(res) {
+            data = res.data;
+            var str = template('model', res);
+            console.log(str);
+        })
+    </script>
+
+    <!-- 
+    <script>
+        $.getJSON( {
             $('#tbody').empty();
             // console.log(res)
             res.data.forEach(function(item, index) {
@@ -145,7 +172,7 @@
 
             })
         })
-    </script>
+    </script> -->
 
 </body>
 
