@@ -31,13 +31,13 @@
             </div>
             <div class="col-sm-3 col-xs-6">
                 <div class="spannel scolor02">
-                    <em>35</em><span>条</span>
+                    <em id="review">  35</em><span>条</span>
                     <b>评论总数</b>
                 </div>
             </div>
             <div class="col-sm-3 col-xs-6">
                 <div class="spannel scolor03">
-                    <em>123</em><span>条</span>
+                    <em id="day_review">123</em><span>条</span>
                     <b>日新增评论数</b>
                 </div>
             </div>
@@ -455,6 +455,7 @@
         };
         oColumn.setOption(oColumnopt);
     </script>
+    <!-- 文章数量统计 -->
     <script>
         var all_count = $('#all').text();
         var day_count = $('#part').text();
@@ -471,6 +472,22 @@
         })
     </script>
 
+    <!-- 评论数量统计 -->
+    <script>
+        var all_count = $('#review').text();
+        var day_count = $('#day_review').text();
+        // console.log(all_count, day_count)
+        $.getJSON('http://localhost:8000/admin/article_count', {
+            all_count: all_count,
+            day_count: day_count
+        }, function(reset) {
+            console.log(reset)
+            if (reset.code === 200) {
+                $('#review').text(reset.data.all_count);
+                $('#day_review').text(reset.data.day_count);
+            }
+        })
+    </script>
 
 </body>
 
