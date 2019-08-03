@@ -23,29 +23,30 @@
             文章编辑
         </div>
         <div class="container-fluid common_con">
-            <form class="form-horizontal article_form">
+            <form class="form-horizontal article_form" id="myform">
+                <!-- <input type="hidden" name="id" id="tit"> -->
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">文章标题：</label>
                     <div class="col-sm-10">
-                        <input type="email" class="form-control" id="inputEmail3" value="文章标题文字">
+                        <input type="email" class="form-control" value="文章标题文字" id="title" name="title">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">文章封面：</label>
                     <div class="col-sm-10">
-                        <img src="images/pic06.jpg" class="article_cover">
-                        <input type="file" id="exampleInputFile">
+                        <img src="images/pic06.jpg" class="article_cover" id="cover">
+                        <input type="file" id="exampleInputFile" name="cover">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">文章类别：</label>
                     <div class="col-sm-4">
-                        <select class="form-control">
-                            <option>类别一</option>
+                        <select class="form-control" id="type" name="type">
+                            <!-- <option>类别一</option>
                             <option>类别二</option>
                             <option>类别三</option>
                             <option selected>类别四</option>
-                            <option>类别五</option>
+                            <option>类别五</option> -->
                         </select>
                     </div>
                 </div>
@@ -54,7 +55,7 @@
                     <div class="col-sm-4">
 
                         <div class="input-group">
-                            <input type="text" class="form-control" value="2019-05-17" id="dateinput">
+                            <input type="text" class="form-control date" value="2019-05-17" id="dateinput" name="data">
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="button"
                                     onclick="jeDate('#dateinput',{trigger:false,format: 'YYYY-MM-DD'})"><i
@@ -66,17 +67,68 @@
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">文章内容：</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="rich_content" name="content" placeholder="文章内容" value="文章内容">
+                        <input type="text" class="form-control" name="content" value="文章内容" id="content">
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-success">修改</button>
+                        <button type="button" class="btn btn-success" id="btn">修改</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+    <script src="./js/jquery-1.12.4.min.js"></script>
+    <script src="./js/template-web.js"></script>
+    <script type="text/html" id="arttemplate">
+        {{each data item}}
+        <option value={{item.id}}>{{item.name}}</option>
+        {{/each}}
+    </script>
+    <script>
+        //  <!-- 1. 获取文章的id值 -->
+        var id = window.location.search.substr(4);
+        console.log(id);
+        // 2.获取文章类别
+        $.getJSON('http://localhost:8000/admin/category_search', function(res) {
+            // console.log(res);
+            var str = template('arttemplate', res);
+            $('#type').html(str)
+
+            $.get('http://localhost:8000/admin/search', {
+                id: id
+            }, function(result) {
+                var data = result.data;
+                console.log(data);
+                $('#title').val(data.title);
+                $('#cover').attr('src', data.cover);
+                $('#type').val(data.type);
+                $('.date').val(data.date);
+                $('#content').val(data.content)
+                console.log($('#title').val())
+
+            })
+        })
+
+
+        $('#btn').click(function() {
+            var fd = new FormData(document.getElementById('myform'));
+            console.log(id)
+            fd.append('id', id)
+            $.ajax({
+                url: 'http://localhost:8000/admin/article_edit',
+                type: 'post',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function(result) {
+                    console.log(result)
+                }
+            })
+        })
+    </script>
+
+
 
 </body>
 
